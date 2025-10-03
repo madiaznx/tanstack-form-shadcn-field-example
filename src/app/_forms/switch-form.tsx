@@ -2,30 +2,36 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Field, FieldContent, FieldDescription, FieldLabel } from "@/components/ui/field";
+import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Switch } from "@/components/ui/switch";
 import { useForm } from "@tanstack/react-form";
+import { toast } from "sonner";
 
 export default function SwitchForm() {
   const form = useForm({
     defaultValues: {
       newsletter: false,
       notifications: false,
-      darkMode: false,
-      autoSave: true,
       analytics: false,
       marketing: false,
     },
     onSubmit: async ({ value }) => {
-      console.log("Switch form submitted:", value);
+      const enabledSettings = Object.entries(value)
+        .filter(([_, enabled]) => enabled)
+        .map(([key, _]) => key);
+
+      toast.success("Privacy settings saved!", {
+        description: `Enabled: ${enabledSettings.join(", ") || "None"}`,
+      });
+      form.reset();
     },
   });
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Switch Fields Example</CardTitle>
-        <CardDescription>Toggle switches for boolean settings and preferences.</CardDescription>
+        <CardTitle>Privacy Settings</CardTitle>
+        <CardDescription>Control your privacy preferences and communication settings.</CardDescription>
       </CardHeader>
       <CardContent>
         <form
@@ -71,40 +77,6 @@ export default function SwitchForm() {
           />
 
           <form.Field
-            name="darkMode"
-            children={(field) => (
-              <Field orientation="horizontal">
-                <Switch
-                  id={field.name}
-                  checked={field.state.value}
-                  onCheckedChange={(checked) => field.handleChange(checked === true)}
-                />
-                <FieldContent>
-                  <FieldLabel htmlFor={field.name}>Dark Mode</FieldLabel>
-                  <FieldDescription>Switch to dark theme for better viewing in low light.</FieldDescription>
-                </FieldContent>
-              </Field>
-            )}
-          />
-
-          <form.Field
-            name="autoSave"
-            children={(field) => (
-              <Field orientation="horizontal">
-                <Switch
-                  id={field.name}
-                  checked={field.state.value}
-                  onCheckedChange={(checked) => field.handleChange(checked === true)}
-                />
-                <FieldContent>
-                  <FieldLabel htmlFor={field.name}>Auto Save</FieldLabel>
-                  <FieldDescription>Automatically save your work as you type.</FieldDescription>
-                </FieldContent>
-              </Field>
-            )}
-          />
-
-          <form.Field
             name="analytics"
             children={(field) => (
               <Field orientation="horizontal">
@@ -141,9 +113,14 @@ export default function SwitchForm() {
           <form.Subscribe
             selector={(state) => [state.canSubmit, state.isSubmitting]}
             children={([canSubmit, isSubmitting]) => (
-              <Button type="submit" disabled={!canSubmit} className="w-full">
-                {isSubmitting ? "Submitting..." : "Submit"}
-              </Button>
+              <FieldGroup>
+                <Field orientation="responsive">
+                  <Button type="submit">{isSubmitting ? "Submitting..." : "Submit"}</Button>
+                  <Button type="button" variant="outline" onClick={() => form.reset()}>
+                    Clear
+                  </Button>
+                </Field>
+              </FieldGroup>
             )}
           />
         </form>

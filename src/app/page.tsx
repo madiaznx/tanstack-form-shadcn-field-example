@@ -18,7 +18,6 @@ import InputForm from "@/app/_forms/input-form";
 import RadioForm from "@/app/_forms/radio-form";
 import ResponsiveForm from "@/app/_forms/responsive-form";
 import SelectForm from "@/app/_forms/select-form";
-import SignupForm from "@/app/_forms/signup-form";
 import SliderForm from "@/app/_forms/slider-form";
 import SwitchForm from "@/app/_forms/switch-form";
 import TextareaForm from "@/app/_forms/textarea-form";
@@ -35,7 +34,6 @@ const formOptions = [
   { id: "choice-card", label: "Choice Card", component: ChoiceCardForm },
   { id: "field-group", label: "Field Group", component: FieldGroupForm },
   { id: "responsive", label: "Responsive Layout", component: ResponsiveForm },
-  { id: "signup", label: "Sign Up Form", component: SignupForm },
 ];
 
 export default function App() {

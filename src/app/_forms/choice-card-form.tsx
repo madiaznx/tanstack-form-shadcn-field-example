@@ -2,27 +2,34 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Field, FieldDescription, FieldError, FieldLabel, FieldTitle } from "@/components/ui/field";
+import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel, FieldTitle } from "@/components/ui/field";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useForm } from "@tanstack/react-form";
+import { toast } from "sonner";
 
 export default function ChoiceCardForm() {
   const form = useForm({
     defaultValues: {
       plan: "",
-      theme: "",
-      size: "",
     },
     onSubmit: async ({ value }) => {
-      console.log("Choice card form submitted:", value);
+      const planLabels: Record<string, string> = {
+        free: "Free Plan",
+        pro: "Pro Plan",
+        enterprise: "Enterprise Plan",
+      };
+      toast.success("Plan selected successfully!", {
+        description: `Selected: ${planLabels[value.plan] || value.plan}`,
+      });
+      form.reset();
     },
   });
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Choice Card Example</CardTitle>
-        <CardDescription>Selectable card layouts for better visual choice selection.</CardDescription>
+        <CardTitle>Choose Your Plan</CardTitle>
+        <CardDescription>Select the subscription plan that best fits your needs and budget.</CardDescription>
       </CardHeader>
       <CardContent>
         <form
@@ -40,7 +47,7 @@ export default function ChoiceCardForm() {
             }}
             children={(field) => (
               <Field data-invalid={field.state.meta.isTouched && !field.state.meta.isValid}>
-                <FieldLabel>Subscription Plan</FieldLabel>
+                <FieldLabel>Subscription Plans</FieldLabel>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                   <RadioGroup
                     value={field.state.value}
@@ -107,101 +114,17 @@ export default function ChoiceCardForm() {
             )}
           />
 
-          <form.Field
-            name="theme"
-            children={(field) => (
-              <Field>
-                <FieldLabel>Theme Selection</FieldLabel>
-                <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-                  <RadioGroup
-                    value={field.state.value}
-                    onValueChange={(value) => field.handleChange(value)}
-                    className="contents"
-                  >
-                    {[
-                      { id: "light", label: "Light", description: "Clean and bright" },
-                      { id: "dark", label: "Dark", description: "Easy on the eyes" },
-                      { id: "blue", label: "Blue", description: "Professional look" },
-                      { id: "green", label: "Green", description: "Nature inspired" },
-                    ].map((theme) => (
-                      <FieldLabel key={theme.id} htmlFor={theme.id} className="cursor-pointer">
-                        <Field className="hover:bg-accent/50 h-full rounded-lg border p-4 text-center transition-colors">
-                          <div className="mb-2 flex justify-center">
-                            <RadioGroupItem id={theme.id} value={theme.id} />
-                          </div>
-                          <FieldTitle>{theme.label}</FieldTitle>
-                          <FieldDescription className="text-xs">{theme.description}</FieldDescription>
-                        </Field>
-                      </FieldLabel>
-                    ))}
-                  </RadioGroup>
-                </div>
-                <FieldDescription>Choose your preferred color theme.</FieldDescription>
-              </Field>
-            )}
-          />
-
-          <form.Field
-            name="size"
-            children={(field) => (
-              <Field>
-                <FieldLabel>Company Size</FieldLabel>
-                <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-                  <RadioGroup
-                    value={field.state.value}
-                    onValueChange={(value) => field.handleChange(value)}
-                    className="contents"
-                  >
-                    {[
-                      {
-                        id: "startup",
-                        label: "Startup",
-                        description: "1-10 employees",
-                        icon: "🚀",
-                      },
-                      {
-                        id: "small",
-                        label: "Small Business",
-                        description: "11-50 employees",
-                        icon: "🏢",
-                      },
-                      {
-                        id: "medium",
-                        label: "Medium Business",
-                        description: "51-200 employees",
-                        icon: "🏭",
-                      },
-                      {
-                        id: "large",
-                        label: "Enterprise",
-                        description: "200+ employees",
-                        icon: "🏛️",
-                      },
-                    ].map((size) => (
-                      <FieldLabel key={size.id} htmlFor={size.id} className="cursor-pointer">
-                        <Field className="hover:bg-accent/50 h-full rounded-lg border p-4 transition-colors">
-                          <div className="mb-2 flex items-center space-x-2">
-                            <RadioGroupItem id={size.id} value={size.id} />
-                            <span className="text-lg">{size.icon}</span>
-                            <FieldTitle>{size.label}</FieldTitle>
-                          </div>
-                          <FieldDescription>{size.description}</FieldDescription>
-                        </Field>
-                      </FieldLabel>
-                    ))}
-                  </RadioGroup>
-                </div>
-                <FieldDescription>What's the size of your organization?</FieldDescription>
-              </Field>
-            )}
-          />
-
           <form.Subscribe
             selector={(state) => [state.canSubmit, state.isSubmitting]}
             children={([canSubmit, isSubmitting]) => (
-              <Button type="submit" disabled={!canSubmit} className="w-full">
-                {isSubmitting ? "Submitting..." : "Submit"}
-              </Button>
+              <FieldGroup>
+                <Field orientation="responsive">
+                  <Button type="submit">{isSubmitting ? "Submitting..." : "Submit"}</Button>
+                  <Button type="button" variant="outline" onClick={() => form.reset()}>
+                    Clear
+                  </Button>
+                </Field>
+              </FieldGroup>
             )}
           />
         </form>

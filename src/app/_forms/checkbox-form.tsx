@@ -3,27 +3,28 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Field, FieldDescription, FieldError, FieldLabel } from "@/components/ui/field";
+import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
 import { useForm } from "@tanstack/react-form";
+import { toast } from "sonner";
 
 export default function CheckboxForm() {
   const form = useForm({
     defaultValues: {
-      interests: [] as string[],
       notifications: [] as string[],
-      terms: false,
-      newsletter: false,
     },
     onSubmit: async ({ value }) => {
-      console.log("Checkbox form submitted:", value);
+      toast.success("Notification preferences saved!", {
+        description: `Selected: ${value.notifications.join(", ") || "None"}`,
+      });
+      form.reset();
     },
   });
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Checkbox Fields Example</CardTitle>
-        <CardDescription>Multiple choice selections and boolean toggles using checkboxes.</CardDescription>
+        <CardTitle>Notification Preferences</CardTitle>
+        <CardDescription>Customize how you receive updates and communications from our platform.</CardDescription>
       </CardHeader>
       <CardContent>
         <form
@@ -34,42 +35,6 @@ export default function CheckboxForm() {
           }}
           className="space-y-6"
         >
-          <form.Field
-            name="interests"
-            children={(field) => (
-              <Field>
-                <FieldLabel>Topics of Interest</FieldLabel>
-                <div className="grid grid-cols-2 gap-4">
-                  {[
-                    { id: "tech", label: "Technology" },
-                    { id: "design", label: "Design" },
-                    { id: "business", label: "Business" },
-                    { id: "science", label: "Science" },
-                    { id: "art", label: "Art" },
-                    { id: "sports", label: "Sports" },
-                  ].map((topic) => (
-                    <div key={topic.id} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={topic.id}
-                        checked={field.state.value.includes(topic.id)}
-                        onCheckedChange={(checked) => {
-                          const current = field.state.value;
-                          if (checked) {
-                            field.handleChange([...current, topic.id]);
-                          } else {
-                            field.handleChange(current.filter((item) => item !== topic.id));
-                          }
-                        }}
-                      />
-                      <FieldLabel htmlFor={topic.id}>{topic.label}</FieldLabel>
-                    </div>
-                  ))}
-                </div>
-                <FieldDescription>Select all topics that interest you.</FieldDescription>
-              </Field>
-            )}
-          />
-
           <form.Field
             name="notifications"
             children={(field) => (
@@ -108,66 +73,15 @@ export default function CheckboxForm() {
             )}
           />
 
-          <form.Field
-            name="newsletter"
-            validators={{
-              onChange: ({ value }) => (!value ? "You must subscribe to our newsletter" : undefined),
-            }}
-            children={(field) => (
-              <Field data-invalid={field.state.meta.isTouched && !field.state.meta.isValid}>
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id={field.name}
-                    checked={field.state.value}
-                    onCheckedChange={(checked) => field.handleChange(checked === true)}
-                  />
-                  <FieldLabel htmlFor={field.name}>Subscribe to Newsletter</FieldLabel>
-                </div>
-                <FieldDescription>Stay updated with our latest news and offers.</FieldDescription>
-                {field.state.meta.isTouched && !field.state.meta.isValid && (
-                  <FieldError>{field.state.meta.errors.join(", ")}</FieldError>
-                )}
-              </Field>
-            )}
-          />
-
-          <form.Field
-            name="terms"
-            validators={{
-              onChange: ({ value }) => (!value ? "You must accept the terms and conditions" : undefined),
-            }}
-            children={(field) => (
-              <Field data-invalid={field.state.meta.isTouched && !field.state.meta.isValid}>
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id={field.name}
-                    checked={field.state.value}
-                    onCheckedChange={(checked) => field.handleChange(checked === true)}
-                  />
-                  <FieldLabel htmlFor={field.name}>
-                    I agree to the{" "}
-                    <a href="#" className="text-primary underline">
-                      Terms and Conditions
-                    </a>{" "}
-                    and{" "}
-                    <a href="#" className="text-primary underline">
-                      Privacy Policy
-                    </a>
-                  </FieldLabel>
-                </div>
-                {field.state.meta.isTouched && !field.state.meta.isValid && (
-                  <FieldError>{field.state.meta.errors.join(", ")}</FieldError>
-                )}
-              </Field>
-            )}
-          />
-
           <form.Subscribe
             selector={(state) => [state.canSubmit, state.isSubmitting]}
             children={([canSubmit, isSubmitting]) => (
-              <Button type="submit" disabled={!canSubmit} className="w-full">
-                {isSubmitting ? "Submitting..." : "Submit"}
-              </Button>
+              <Field orientation="responsive">
+                <Button type="submit">{isSubmitting ? "Submitting..." : "Submit"}</Button>
+                <Button type="button" variant="outline" onClick={() => form.reset()}>
+                  Clear
+                </Button>
+              </Field>
             )}
           />
         </form>
