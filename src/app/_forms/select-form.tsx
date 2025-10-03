@@ -47,6 +47,7 @@ export default function SelectForm() {
                     <SelectValue placeholder="Select a country" />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="in">India</SelectItem>
                     <SelectItem value="us">United States</SelectItem>
                     <SelectItem value="ca">Canada</SelectItem>
                     <SelectItem value="uk">United Kingdom</SelectItem>
