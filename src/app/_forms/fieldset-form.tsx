@@ -54,7 +54,6 @@ export default function FieldsetForm() {
                 name="streetAddress"
                 validators={{
                   onBlur: ({ value }) => (!value ? "Street address is required" : undefined),
-                  onMount: ({ value }) => (!value ? "Street address is required" : undefined),
                 }}
                 children={(field) => (
                   <Field data-invalid={field.state.meta.isTouched && !field.state.meta.isValid}>
@@ -80,7 +79,6 @@ export default function FieldsetForm() {
                   name="city"
                   validators={{
                     onBlur: ({ value }) => (!value ? "City is required" : undefined),
-                    onMount: ({ value }) => (!value ? "City is required" : undefined),
                   }}
                   children={(field) => (
                     <Field data-invalid={field.state.meta.isTouched && !field.state.meta.isValid}>
@@ -105,7 +103,6 @@ export default function FieldsetForm() {
                   name="postalCode"
                   validators={{
                     onBlur: ({ value }) => (!value ? "Postal code is required" : undefined),
-                    onMount: ({ value }) => (!value ? "Postal code is required" : undefined),
                   }}
                   children={(field) => (
                     <Field data-invalid={field.state.meta.isTouched && !field.state.meta.isValid}>

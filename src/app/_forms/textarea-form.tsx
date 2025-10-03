@@ -43,11 +43,6 @@ export default function TextareaForm() {
                 if (value.length > 500) return "About section must be less than 500 characters";
                 return undefined;
               },
-              onMount: ({ value }) => {
-                if (!value) return "About section is required";
-                if (value.length > 500) return "About section must be less than 500 characters";
-                return undefined;
-              },
             }}
             children={(field) => (
               <Field data-invalid={field.state.meta.isTouched && !field.state.meta.isValid}>

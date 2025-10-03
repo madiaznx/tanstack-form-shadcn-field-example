@@ -46,11 +46,6 @@ export default function InputForm() {
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 return !emailRegex.test(value) ? "Please enter a valid email address" : undefined;
               },
-              onMount: ({ value }) => {
-                if (!value) return "Email is required";
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                return !emailRegex.test(value) ? "Please enter a valid email address" : undefined;
-              },
             }}
             children={(field) => (
               <Field data-invalid={field.state.meta.isTouched && !field.state.meta.isValid}>
@@ -76,7 +71,6 @@ export default function InputForm() {
             name="password"
             validators={{
               onBlur: ({ value }) => (!value ? "Password is required" : undefined),
-              onMount: ({ value }) => (!value ? "Password is required" : undefined),
             }}
             children={(field) => (
               <Field data-invalid={field.state.meta.isTouched && !field.state.meta.isValid}>

@@ -56,7 +56,6 @@ export default function ResponsiveForm() {
                   name="name"
                   validators={{
                     onBlur: ({ value }) => (!value ? "Name is required" : undefined),
-                    onMount: ({ value }) => (!value ? "Name is required" : undefined),
                   }}
                   children={(field) => (
                     <Field
@@ -88,7 +87,6 @@ export default function ResponsiveForm() {
                   name="message"
                   validators={{
                     onBlur: ({ value }) => (!value ? "Message is required" : undefined),
-                    onMount: ({ value }) => (!value ? "Message is required" : undefined),
                   }}
                   children={(field) => (
                     <Field

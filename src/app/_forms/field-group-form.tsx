@@ -129,7 +129,6 @@ export default function FieldGroupForm() {
                 name="phone"
                 validators={{
                   onBlur: ({ value }) => (!value ? "Phone number is required" : undefined),
-                  onMount: ({ value }) => (!value ? "Phone number is required" : undefined),
                 }}
                 children={(field) => (
                   <Field data-invalid={field.state.meta.isTouched && !field.state.meta.isValid} className="flex-1">
@@ -160,7 +159,6 @@ export default function FieldGroupForm() {
                 name="address"
                 validators={{
                   onBlur: ({ value }) => (!value ? "Street address is required" : undefined),
-                  onMount: ({ value }) => (!value ? "Street address is required" : undefined),
                 }}
                 children={(field) => (
                   <Field data-invalid={field.state.meta.isTouched && !field.state.meta.isValid} className="flex-1">
@@ -185,7 +183,6 @@ export default function FieldGroupForm() {
                 name="city"
                 validators={{
                   onBlur: ({ value }) => (!value ? "City is required" : undefined),
-                  onMount: ({ value }) => (!value ? "City is required" : undefined),
                 }}
                 children={(field) => (
                   <Field data-invalid={field.state.meta.isTouched && !field.state.meta.isValid} className="flex-1">
