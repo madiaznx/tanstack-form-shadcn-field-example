@@ -12,7 +12,6 @@ import { useState } from "react";
 
 import CheckboxForm from "@/app/_forms/checkbox-form";
 import ChoiceCardForm from "@/app/_forms/choice-card-form";
-import ExtensiveForm from "@/app/_forms/extensive-form";
 import FieldGroupForm from "@/app/_forms/field-group-form";
 import FieldsetForm from "@/app/_forms/fieldset-form";
 import InputForm from "@/app/_forms/input-form";
@@ -36,7 +35,6 @@ const formOptions = [
   { id: "choice-card", label: "Choice Card", component: ChoiceCardForm },
   { id: "field-group", label: "Field Group", component: FieldGroupForm },
   { id: "responsive", label: "Responsive Layout", component: ResponsiveForm },
-  { id: "extensive", label: "Extensive All-in-One", component: ExtensiveForm },
   { id: "signup", label: "Sign Up Form", component: SignupForm },
 ];
 
