@@ -21,6 +21,7 @@ import SelectForm from "@/app/_forms/select-form";
 import SliderForm from "@/app/_forms/slider-form";
 import SwitchForm from "@/app/_forms/switch-form";
 import TextareaForm from "@/app/_forms/textarea-form";
+import DateInputForm from "./_forms/date-input-form";
 
 const formOptions = [
   { id: "input", label: "Input Fields", component: InputForm },
@@ -34,6 +35,7 @@ const formOptions = [
   { id: "choice-card", label: "Choice Card", component: ChoiceCardForm },
   { id: "field-group", label: "Field Group", component: FieldGroupForm },
   { id: "responsive", label: "Responsive Layout", component: ResponsiveForm },
+  { id: "date-input", label: "Date Input Field", component: DateInputForm },
 ];
 
 export default function App() {
