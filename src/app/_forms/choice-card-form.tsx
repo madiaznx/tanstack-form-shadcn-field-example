@@ -4,24 +4,37 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel, FieldTitle } from "@/components/ui/field";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useForm } from "@tanstack/react-form";
+import { revalidateLogic, useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
+import { z } from "zod";
+
+const choiceCardFormSchema = z.object({
+  plan: z.string().min(1, "Please select a plan"),
+});
+
+type ChoiceCardFormData = z.infer<typeof choiceCardFormSchema>;
+
+const defaultValues: ChoiceCardFormData = {
+  plan: "",
+};
 
 export default function ChoiceCardForm() {
   const form = useForm({
-    defaultValues: {
-      plan: "",
-    },
-    onSubmit: async ({ value }) => {
-      const planLabels: Record<string, string> = {
-        free: "Free Plan",
-        pro: "Pro Plan",
-        enterprise: "Enterprise Plan",
-      };
-      toast.success("Plan selected successfully!", {
-        description: `Selected: ${planLabels[value.plan] || value.plan}`,
-      });
-      form.reset();
+    defaultValues: defaultValues,
+    validationLogic: revalidateLogic(),
+    validators: {
+      onDynamic: choiceCardFormSchema,
+      onSubmitAsync: async ({ value }) => {
+        const planLabels: Record<string, string> = {
+          free: "Free Plan",
+          pro: "Pro Plan",
+          enterprise: "Enterprise Plan",
+        };
+        toast.success("Plan selected successfully!", {
+          description: `Selected: ${planLabels[value.plan] || value.plan}`,
+        });
+        form.reset();
+      },
     },
   });
 
@@ -42,9 +55,6 @@ export default function ChoiceCardForm() {
         >
           <form.Field
             name="plan"
-            validators={{
-              onChange: ({ value }) => (!value ? "Please select a plan" : undefined),
-            }}
             children={(field) => (
               <Field data-invalid={field.state.meta.isTouched && !field.state.meta.isValid}>
                 <FieldLabel>Subscription Plans</FieldLabel>
@@ -107,9 +117,7 @@ export default function ChoiceCardForm() {
                   </RadioGroup>
                 </div>
                 <FieldDescription>Choose the plan that best fits your needs.</FieldDescription>
-                {field.state.meta.isTouched && !field.state.meta.isValid && (
-                  <FieldError>{field.state.meta.errors.join(", ")}</FieldError>
-                )}
+                <FieldError errors={field.state.meta.errors} />
               </Field>
             )}
           />

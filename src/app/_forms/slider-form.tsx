@@ -4,19 +4,32 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Slider } from "@/components/ui/slider";
-import { useForm } from "@tanstack/react-form";
+import { revalidateLogic, useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
+import { z } from "zod";
+
+const sliderFormSchema = z.object({
+  budget: z.array(z.number()).min(1, "Budget must have at least one value"),
+});
+
+type SliderFormData = z.infer<typeof sliderFormSchema>;
+
+const defaultValues: SliderFormData = {
+  budget: [50],
+};
 
 export default function SliderForm() {
   const form = useForm({
-    defaultValues: {
-      budget: [50],
-    },
-    onSubmit: async ({ value }) => {
-      toast.success("Budget configuration saved!", {
-        description: `Budget: $${value.budget[0]}`,
-      });
-      form.reset();
+    defaultValues: defaultValues,
+    validationLogic: revalidateLogic(),
+    validators: {
+      onDynamic: sliderFormSchema,
+      onSubmitAsync: async ({ value }) => {
+        toast.success("Budget configuration saved!", {
+          description: `Budget: $${value.budget[0]}`,
+        });
+        form.reset();
+      },
     },
   });
 

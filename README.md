@@ -7,6 +7,7 @@ Example implementation of TanStack Form and Shadcn Field.
 - Next.js (Web Framework)
 - Shadcn (Components)
 - TanStack Form (Form Library)
+- Zod (Schema Validation Library)
 
 ### Form Code:
 

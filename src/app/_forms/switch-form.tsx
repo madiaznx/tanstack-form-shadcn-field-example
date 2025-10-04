@@ -4,26 +4,42 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Switch } from "@/components/ui/switch";
-import { useForm } from "@tanstack/react-form";
+import { revalidateLogic, useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
+import { z } from "zod";
+
+const switchFormSchema = z.object({
+  newsletter: z.boolean(),
+  notifications: z.boolean(),
+  analytics: z.boolean(),
+  marketing: z.boolean(),
+});
+
+type SwitchFormData = z.infer<typeof switchFormSchema>;
+
+const defaultValues: SwitchFormData = {
+  newsletter: false,
+  notifications: false,
+  analytics: false,
+  marketing: false,
+};
 
 export default function SwitchForm() {
   const form = useForm({
-    defaultValues: {
-      newsletter: false,
-      notifications: false,
-      analytics: false,
-      marketing: false,
-    },
-    onSubmit: async ({ value }) => {
-      const enabledSettings = Object.entries(value)
-        .filter(([_, enabled]) => enabled)
-        .map(([key, _]) => key);
+    defaultValues: defaultValues,
+    validationLogic: revalidateLogic(),
+    validators: {
+      onDynamic: switchFormSchema,
+      onSubmitAsync: async ({ value }) => {
+        const enabledSettings = Object.entries(value)
+          .filter(([_, enabled]) => enabled)
+          .map(([key, _]) => key);
 
-      toast.success("Privacy settings saved!", {
-        description: `Enabled: ${enabledSettings.join(", ") || "None"}`,
-      });
-      form.reset();
+        toast.success("Privacy settings saved!", {
+          description: `Enabled: ${enabledSettings.join(", ") || "None"}`,
+        });
+        form.reset();
+      },
     },
   });
 

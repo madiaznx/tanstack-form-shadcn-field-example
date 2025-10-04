@@ -5,21 +5,36 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Checkbox } from "@/components/ui/checkbox";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useForm } from "@tanstack/react-form";
+import { revalidateLogic, useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
+import { z } from "zod";
+
+const inputFormSchema = z.object({
+  email: z.string().min(1, "Email is required").email("Please enter a valid email address"),
+  password: z.string().min(1, "Password is required"),
+  remember: z.boolean(),
+});
+
+type InputFormData = z.infer<typeof inputFormSchema>;
+
+const defaultValues: InputFormData = {
+  email: "",
+  password: "",
+  remember: false,
+};
 
 export default function InputForm() {
   const form = useForm({
-    defaultValues: {
-      email: "",
-      password: "",
-      remember: false,
-    },
-    onSubmit: async ({ value }) => {
-      toast.success("Login successful!", {
-        description: `Email: ${value.email}, Remember: ${value.remember ? "Yes" : "No"}`,
-      });
-      form.reset();
+    defaultValues: defaultValues,
+    validationLogic: revalidateLogic(),
+    validators: {
+      onDynamic: inputFormSchema,
+      onSubmitAsync: async ({ value }) => {
+        toast.success("Login successful!", {
+          description: `Email: ${value.email}, Remember: ${value.remember ? "Yes" : "No"}`,
+        });
+        form.reset();
+      },
     },
   });
 
@@ -40,13 +55,6 @@ export default function InputForm() {
         >
           <form.Field
             name="email"
-            validators={{
-              onBlur: ({ value }) => {
-                if (!value) return "Email is required";
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                return !emailRegex.test(value) ? "Please enter a valid email address" : undefined;
-              },
-            }}
             children={(field) => (
               <Field data-invalid={field.state.meta.isTouched && !field.state.meta.isValid}>
                 <FieldLabel htmlFor={field.name}>Email</FieldLabel>
@@ -60,18 +68,13 @@ export default function InputForm() {
                   aria-invalid={field.state.meta.isTouched && !field.state.meta.isValid}
                   placeholder="m@example.com"
                 />
-                {field.state.meta.isTouched && !field.state.meta.isValid && (
-                  <FieldError>{field.state.meta.errors.join(", ")}</FieldError>
-                )}
+                <FieldError errors={field.state.meta.errors} />
               </Field>
             )}
           />
 
           <form.Field
             name="password"
-            validators={{
-              onBlur: ({ value }) => (!value ? "Password is required" : undefined),
-            }}
             children={(field) => (
               <Field data-invalid={field.state.meta.isTouched && !field.state.meta.isValid}>
                 <div className="flex items-center justify-between">
@@ -90,9 +93,7 @@ export default function InputForm() {
                   aria-invalid={field.state.meta.isTouched && !field.state.meta.isValid}
                   placeholder="password"
                 />
-                {field.state.meta.isTouched && !field.state.meta.isValid && (
-                  <FieldError>{field.state.meta.errors.join(", ")}</FieldError>
-                )}
+                <FieldError errors={field.state.meta.errors} />
               </Field>
             )}
           />

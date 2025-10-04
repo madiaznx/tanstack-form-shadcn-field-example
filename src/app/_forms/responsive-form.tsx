@@ -15,20 +15,34 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useForm } from "@tanstack/react-form";
+import { revalidateLogic, useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
+import { z } from "zod";
+
+const responsiveFormSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  message: z.string().min(1, "Message is required"),
+});
+
+type ResponsiveFormData = z.infer<typeof responsiveFormSchema>;
+
+const defaultValues: ResponsiveFormData = {
+  name: "",
+  message: "",
+};
 
 export default function ResponsiveForm() {
   const form = useForm({
-    defaultValues: {
-      name: "",
-      message: "",
-    },
-    onSubmit: async ({ value }) => {
-      toast.success("Message sent successfully!", {
-        description: `From: ${value.name}`,
-      });
-      form.reset();
+    defaultValues: defaultValues,
+    validationLogic: revalidateLogic(),
+    validators: {
+      onDynamic: responsiveFormSchema,
+      onSubmitAsync: async ({ value }) => {
+        toast.success("Message sent successfully!", {
+          description: `From: ${value.name}`,
+        });
+        form.reset();
+      },
     },
   });
 
@@ -54,9 +68,6 @@ export default function ResponsiveForm() {
               <FieldGroup>
                 <form.Field
                   name="name"
-                  validators={{
-                    onBlur: ({ value }) => (!value ? "Name is required" : undefined),
-                  }}
                   children={(field) => (
                     <Field
                       orientation="responsive"
@@ -76,18 +87,13 @@ export default function ResponsiveForm() {
                         placeholder="Evil Rabbit"
                         required
                       />
-                      {field.state.meta.isTouched && !field.state.meta.isValid && (
-                        <FieldError>{field.state.meta.errors.join(", ")}</FieldError>
-                      )}
+                      <FieldError errors={field.state.meta.errors} />
                     </Field>
                   )}
                 />
                 <FieldSeparator />
                 <form.Field
                   name="message"
-                  validators={{
-                    onBlur: ({ value }) => (!value ? "Message is required" : undefined),
-                  }}
                   children={(field) => (
                     <Field
                       orientation="responsive"
@@ -110,9 +116,7 @@ export default function ResponsiveForm() {
                         required
                         className="min-h-[100px] resize-none sm:min-w-[300px]"
                       />
-                      {field.state.meta.isTouched && !field.state.meta.isValid && (
-                        <FieldError>{field.state.meta.errors.join(", ")}</FieldError>
-                      )}
+                      <FieldError errors={field.state.meta.errors} />
                     </Field>
                   )}
                 />

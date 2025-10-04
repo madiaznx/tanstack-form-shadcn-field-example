@@ -4,25 +4,38 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useForm } from "@tanstack/react-form";
+import { revalidateLogic, useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
+import { z } from "zod";
+
+const radioFormSchema = z.object({
+  experience: z.string().min(1, "Please select your experience level"),
+});
+
+type RadioFormData = z.infer<typeof radioFormSchema>;
+
+const defaultValues: RadioFormData = {
+  experience: "",
+};
 
 export default function RadioForm() {
   const form = useForm({
-    defaultValues: {
-      experience: "",
-    },
-    onSubmit: async ({ value }) => {
-      const experienceLabels: Record<string, string> = {
-        beginner: "Beginner (0-1 years)",
-        intermediate: "Intermediate (2-5 years)",
-        advanced: "Advanced (6-10 years)",
-        expert: "Expert (10+ years)",
-      };
-      toast.success("Experience level saved!", {
-        description: `Level: ${experienceLabels[value.experience] || value.experience}`,
-      });
-      form.reset();
+    defaultValues: defaultValues,
+    validationLogic: revalidateLogic(),
+    validators: {
+      onDynamic: radioFormSchema,
+      onSubmitAsync: async ({ value }) => {
+        const experienceLabels: Record<string, string> = {
+          beginner: "Beginner (0-1 years)",
+          intermediate: "Intermediate (2-5 years)",
+          advanced: "Advanced (6-10 years)",
+          expert: "Expert (10+ years)",
+        };
+        toast.success("Experience level saved!", {
+          description: `Level: ${experienceLabels[value.experience] || value.experience}`,
+        });
+        form.reset();
+      },
     },
   });
 
@@ -45,10 +58,6 @@ export default function RadioForm() {
         >
           <form.Field
             name="experience"
-            validators={{
-              onBlur: ({ value }) => (!value ? "Please select your experience level" : undefined),
-              onMount: ({ value }) => (!value ? "Please select your experience level" : undefined),
-            }}
             children={(field) => (
               <Field data-invalid={field.state.meta.isTouched && !field.state.meta.isValid}>
                 <FieldLabel>Experience Level</FieldLabel>
@@ -75,9 +84,7 @@ export default function RadioForm() {
                   </div>
                 </RadioGroup>
                 <FieldDescription>How many years of experience do you have?</FieldDescription>
-                {field.state.meta.isTouched && !field.state.meta.isValid && (
-                  <FieldError>{field.state.meta.errors.join(", ")}</FieldError>
-                )}
+                <FieldError errors={field.state.meta.errors} />
               </Field>
             )}
           />
