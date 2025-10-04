@@ -16,6 +16,7 @@ Example implementation of TanStack Form and Shadcn Field.
   - [Textarea](https://github.com/chitrakshtarun/tanstack-form-shadcn-field-example/blob/main/src/app/_forms/textarea-form.tsx)
   - [Select](https://github.com/chitrakshtarun/tanstack-form-shadcn-field-example/blob/main/src/app/_forms/select-form.tsx)
   - [Slider](https://github.com/chitrakshtarun/tanstack-form-shadcn-field-example/blob/main/src/app/_forms/slider-form.tsx)
+  - [Date Input](https://github.com/chitrakshtarun/tanstack-form-shadcn-field-example/blob/main/src/app/_forms/date-input-form.tsx)
   - [Fieldset](https://github.com/chitrakshtarun/tanstack-form-shadcn-field-example/blob/main/src/app/_forms/fieldset-form.tsx)
   - [Checkbox](https://github.com/chitrakshtarun/tanstack-form-shadcn-field-example/blob/main/src/app/_forms/checkbox-form.tsx)
   - [Radio](https://github.com/chitrakshtarun/tanstack-form-shadcn-field-example/blob/main/src/app/_forms/radio-form.tsx)

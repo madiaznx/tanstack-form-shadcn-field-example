@@ -28,6 +28,7 @@ const formOptions = [
   { id: "textarea", label: "Textarea Fields", component: TextareaForm },
   { id: "select", label: "Select Fields", component: SelectForm },
   { id: "slider", label: "Slider Fields", component: SliderForm },
+  { id: "date-input", label: "Date Input Field", component: DateInputForm },
   { id: "fieldset", label: "Fieldset Example", component: FieldsetForm },
   { id: "checkbox", label: "Checkbox Fields", component: CheckboxForm },
   { id: "radio", label: "Radio Fields", component: RadioForm },
@@ -35,7 +36,6 @@ const formOptions = [
   { id: "choice-card", label: "Choice Card", component: ChoiceCardForm },
   { id: "field-group", label: "Field Group", component: FieldGroupForm },
   { id: "responsive", label: "Responsive Layout", component: ResponsiveForm },
-  { id: "date-input", label: "Date Input Field", component: DateInputForm },
 ];
 
 export default function App() {
