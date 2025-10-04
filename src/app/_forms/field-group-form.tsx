@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldError, FieldGroup, FieldLabel, FieldLegend, FieldSet } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { formatFormError } from "@/utils/format-form-error";
 import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
 
@@ -60,9 +61,7 @@ export default function FieldGroupForm() {
                       aria-invalid={field.state.meta.isTouched && !field.state.meta.isValid}
                       placeholder="Enter your first name"
                     />
-                    {field.state.meta.isTouched && !field.state.meta.isValid && (
-                      <FieldError>{field.state.meta.errors.join(", ")}</FieldError>
-                    )}
+                    <FieldError errors={formatFormError(field.state.meta.errors)} />
                   </Field>
                 )}
               />
@@ -84,9 +83,7 @@ export default function FieldGroupForm() {
                       aria-invalid={field.state.meta.isTouched && !field.state.meta.isValid}
                       placeholder="Enter your last name"
                     />
-                    {field.state.meta.isTouched && !field.state.meta.isValid && (
-                      <FieldError>{field.state.meta.errors.join(", ")}</FieldError>
-                    )}
+                    <FieldError errors={formatFormError(field.state.meta.errors)} />
                   </Field>
                 )}
               />
@@ -118,9 +115,7 @@ export default function FieldGroupForm() {
                       aria-invalid={field.state.meta.isTouched && !field.state.meta.isValid}
                       placeholder="Enter your email address"
                     />
-                    {field.state.meta.isTouched && !field.state.meta.isValid && (
-                      <FieldError>{field.state.meta.errors.join(", ")}</FieldError>
-                    )}
+                    <FieldError errors={formatFormError(field.state.meta.errors)} />
                   </Field>
                 )}
               />
@@ -143,9 +138,7 @@ export default function FieldGroupForm() {
                       aria-invalid={field.state.meta.isTouched && !field.state.meta.isValid}
                       placeholder="Enter your phone number"
                     />
-                    {field.state.meta.isTouched && !field.state.meta.isValid && (
-                      <FieldError>{field.state.meta.errors.join(", ")}</FieldError>
-                    )}
+                    <FieldError errors={formatFormError(field.state.meta.errors)} />
                   </Field>
                 )}
               />
@@ -172,9 +165,7 @@ export default function FieldGroupForm() {
                       aria-invalid={field.state.meta.isTouched && !field.state.meta.isValid}
                       placeholder="Enter your street address"
                     />
-                    {field.state.meta.isTouched && !field.state.meta.isValid && (
-                      <FieldError>{field.state.meta.errors.join(", ")}</FieldError>
-                    )}
+                    <FieldError errors={formatFormError(field.state.meta.errors)} />
                   </Field>
                 )}
               />
@@ -196,9 +187,7 @@ export default function FieldGroupForm() {
                       aria-invalid={field.state.meta.isTouched && !field.state.meta.isValid}
                       placeholder="Enter your city"
                     />
-                    {field.state.meta.isTouched && !field.state.meta.isValid && (
-                      <FieldError>{field.state.meta.errors.join(", ")}</FieldError>
-                    )}
+                    <FieldError errors={formatFormError(field.state.meta.errors)} />
                   </Field>
                 )}
               />

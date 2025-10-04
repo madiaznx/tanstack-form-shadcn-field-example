@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { formatFormError } from "@/utils/format-form-error";
 import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
 
@@ -72,9 +73,7 @@ export default function SelectForm() {
                   </SelectContent>
                 </Select>
                 <FieldDescription>Select your country of residence.</FieldDescription>
-                {field.state.meta.isTouched && !field.state.meta.isValid && (
-                  <FieldError>{field.state.meta.errors.join(", ")}</FieldError>
-                )}
+                <FieldError errors={formatFormError(field.state.meta.errors)} />
               </Field>
             )}
           />

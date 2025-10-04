@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Textarea } from "@/components/ui/textarea";
+import { formatFormError } from "@/utils/format-form-error";
 import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
 
@@ -61,9 +62,7 @@ export default function TextareaForm() {
                   Share your background, interests, or anything you'd like us to know. ({field.state.value.length}/500
                   characters)
                 </FieldDescription>
-                {field.state.meta.isTouched && !field.state.meta.isValid && (
-                  <FieldError>{field.state.meta.errors.join(", ")}</FieldError>
-                )}
+                <FieldError errors={formatFormError(field.state.meta.errors)} />
               </Field>
             )}
           />

@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Checkbox } from "@/components/ui/checkbox";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { formatFormError } from "@/utils/format-form-error";
 import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
 
@@ -60,9 +61,7 @@ export default function InputForm() {
                   aria-invalid={field.state.meta.isTouched && !field.state.meta.isValid}
                   placeholder="m@example.com"
                 />
-                {field.state.meta.isTouched && !field.state.meta.isValid && (
-                  <FieldError>{field.state.meta.errors.join(", ")}</FieldError>
-                )}
+                <FieldError errors={formatFormError(field.state.meta.errors)} />
               </Field>
             )}
           />
@@ -90,9 +89,7 @@ export default function InputForm() {
                   aria-invalid={field.state.meta.isTouched && !field.state.meta.isValid}
                   placeholder="password"
                 />
-                {field.state.meta.isTouched && !field.state.meta.isValid && (
-                  <FieldError>{field.state.meta.errors.join(", ")}</FieldError>
-                )}
+                <FieldError errors={formatFormError(field.state.meta.errors)} />
               </Field>
             )}
           />

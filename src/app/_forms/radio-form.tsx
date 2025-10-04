@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { formatFormError } from "@/utils/format-form-error";
 import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
 
@@ -75,9 +76,7 @@ export default function RadioForm() {
                   </div>
                 </RadioGroup>
                 <FieldDescription>How many years of experience do you have?</FieldDescription>
-                {field.state.meta.isTouched && !field.state.meta.isValid && (
-                  <FieldError>{field.state.meta.errors.join(", ")}</FieldError>
-                )}
+                <FieldError errors={formatFormError(field.state.meta.errors)} />
               </Field>
             )}
           />

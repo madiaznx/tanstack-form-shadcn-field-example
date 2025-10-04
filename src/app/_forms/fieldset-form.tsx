@@ -12,6 +12,7 @@ import {
   FieldSet,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { formatFormError } from "@/utils/format-form-error";
 import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
 
@@ -67,9 +68,7 @@ export default function FieldsetForm() {
                       aria-invalid={field.state.meta.isTouched && !field.state.meta.isValid}
                       placeholder="123 Main St"
                     />
-                    {field.state.meta.isTouched && !field.state.meta.isValid && (
-                      <FieldError>{field.state.meta.errors.join(", ")}</FieldError>
-                    )}
+                    <FieldError errors={formatFormError(field.state.meta.errors)} />
                   </Field>
                 )}
               />
