@@ -4,31 +4,43 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { formatFormError } from "@/utils/format-form-error";
-import { useForm } from "@tanstack/react-form";
+import { revalidateLogic, useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
+import { z } from "zod";
+
+const selectFormSchema = z.object({
+  country: z.string().min(1, "Please select a country"),
+});
+
+type SelectFormData = z.infer<typeof selectFormSchema>;
+
+const defaultValues: SelectFormData = {
+  country: "",
+};
 
 export default function SelectForm() {
   const form = useForm({
-    defaultValues: {
-      country: "",
-    },
-    onSubmit: async ({ value }) => {
-      const countryNames: Record<string, string> = {
-        in: "India",
-        us: "United States",
-        ca: "Canada",
-        uk: "United Kingdom",
-        au: "Australia",
-        de: "Germany",
-        fr: "France",
-        jp: "Japan",
-        br: "Brazil",
-      };
-      toast.success("Location settings saved!", {
-        description: `Country: ${countryNames[value.country] || value.country}`,
-      });
-      form.reset();
+    defaultValues: defaultValues,
+    validationLogic: revalidateLogic(),
+    validators: {
+      onDynamic: selectFormSchema,
+      onSubmitAsync: async ({ value }) => {
+        const countryNames: Record<string, string> = {
+          in: "India",
+          us: "United States",
+          ca: "Canada",
+          uk: "United Kingdom",
+          au: "Australia",
+          de: "Germany",
+          fr: "France",
+          jp: "Japan",
+          br: "Brazil",
+        };
+        toast.success("Location settings saved!", {
+          description: `Country: ${countryNames[value.country] || value.country}`,
+        });
+        form.reset();
+      },
     },
   });
 
@@ -49,10 +61,6 @@ export default function SelectForm() {
         >
           <form.Field
             name="country"
-            validators={{
-              onChange: ({ value }) => (!value ? "Please select a country" : undefined),
-              onMount: ({ value }) => (!value ? "Please select a country" : undefined),
-            }}
             children={(field) => (
               <Field data-invalid={field.state.meta.isTouched && !field.state.meta.isValid}>
                 <FieldLabel htmlFor={field.name}>Country</FieldLabel>
@@ -73,7 +81,7 @@ export default function SelectForm() {
                   </SelectContent>
                 </Select>
                 <FieldDescription>Select your country of residence.</FieldDescription>
-                <FieldError errors={formatFormError(field.state.meta.errors)} />
+                <FieldError errors={field.state.meta.errors} />
               </Field>
             )}
           />

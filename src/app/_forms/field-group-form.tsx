@@ -4,25 +4,42 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldError, FieldGroup, FieldLabel, FieldLegend, FieldSet } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { formatFormError } from "@/utils/format-form-error";
-import { useForm } from "@tanstack/react-form";
+import { revalidateLogic, useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
+import { z } from "zod";
+
+const fieldGroupFormSchema = z.object({
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  email: z.email("Please enter a valid email address").min(1, "Email is required"),
+  phone: z.string().min(1, "Phone number is required"),
+  address: z.string().min(1, "Street address is required"),
+  city: z.string().min(1, "City is required"),
+});
+
+type FieldGroupFormData = z.infer<typeof fieldGroupFormSchema>;
+
+const defaultValues: FieldGroupFormData = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  phone: "",
+  address: "",
+  city: "",
+};
 
 export default function FieldGroupForm() {
   const form = useForm({
-    defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
-      address: "",
-      city: "",
-    },
-    onSubmit: async ({ value }) => {
-      toast.success("Contact information saved!", {
-        description: `${value.firstName} ${value.lastName} - ${value.email}`,
-      });
-      form.reset();
+    defaultValues: defaultValues,
+    validationLogic: revalidateLogic(),
+    validators: {
+      onDynamic: fieldGroupFormSchema,
+      onSubmitAsync: async ({ value }) => {
+        toast.success("Contact information saved!", {
+          description: `${value.firstName} ${value.lastName} - ${value.email}`,
+        });
+        form.reset();
+      },
     },
   });
 
@@ -46,9 +63,6 @@ export default function FieldGroupForm() {
             <FieldGroup className="@container/field-group flex flex-col gap-6 md:flex-row md:gap-4">
               <form.Field
                 name="firstName"
-                validators={{
-                  onBlur: ({ value }) => (!value ? "First name is required" : undefined),
-                }}
                 children={(field) => (
                   <Field data-invalid={field.state.meta.isTouched && !field.state.meta.isValid} className="flex-1">
                     <FieldLabel htmlFor={field.name}>First Name</FieldLabel>
@@ -61,16 +75,13 @@ export default function FieldGroupForm() {
                       aria-invalid={field.state.meta.isTouched && !field.state.meta.isValid}
                       placeholder="Enter your first name"
                     />
-                    <FieldError errors={formatFormError(field.state.meta.errors)} />
+                    <FieldError errors={field.state.meta.errors} />
                   </Field>
                 )}
               />
 
               <form.Field
                 name="lastName"
-                validators={{
-                  onBlur: ({ value }) => (!value ? "Last name is required" : undefined),
-                }}
                 children={(field) => (
                   <Field data-invalid={field.state.meta.isTouched && !field.state.meta.isValid} className="flex-1">
                     <FieldLabel htmlFor={field.name}>Last Name</FieldLabel>
@@ -83,7 +94,7 @@ export default function FieldGroupForm() {
                       aria-invalid={field.state.meta.isTouched && !field.state.meta.isValid}
                       placeholder="Enter your last name"
                     />
-                    <FieldError errors={formatFormError(field.state.meta.errors)} />
+                    <FieldError errors={field.state.meta.errors} />
                   </Field>
                 )}
               />
@@ -95,13 +106,6 @@ export default function FieldGroupForm() {
             <FieldGroup className="@container/field-group flex flex-col gap-6 md:flex-row md:gap-4">
               <form.Field
                 name="email"
-                validators={{
-                  onBlur: ({ value }) => {
-                    if (!value) return "Email is required";
-                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                    return !emailRegex.test(value) ? "Please enter a valid email address" : undefined;
-                  },
-                }}
                 children={(field) => (
                   <Field data-invalid={field.state.meta.isTouched && !field.state.meta.isValid} className="flex-1">
                     <FieldLabel htmlFor={field.name}>Email Address</FieldLabel>
@@ -115,16 +119,13 @@ export default function FieldGroupForm() {
                       aria-invalid={field.state.meta.isTouched && !field.state.meta.isValid}
                       placeholder="Enter your email address"
                     />
-                    <FieldError errors={formatFormError(field.state.meta.errors)} />
+                    <FieldError errors={field.state.meta.errors} />
                   </Field>
                 )}
               />
 
               <form.Field
                 name="phone"
-                validators={{
-                  onBlur: ({ value }) => (!value ? "Phone number is required" : undefined),
-                }}
                 children={(field) => (
                   <Field data-invalid={field.state.meta.isTouched && !field.state.meta.isValid} className="flex-1">
                     <FieldLabel htmlFor={field.name}>Phone Number</FieldLabel>
@@ -138,7 +139,7 @@ export default function FieldGroupForm() {
                       aria-invalid={field.state.meta.isTouched && !field.state.meta.isValid}
                       placeholder="Enter your phone number"
                     />
-                    <FieldError errors={formatFormError(field.state.meta.errors)} />
+                    <FieldError errors={field.state.meta.errors} />
                   </Field>
                 )}
               />
@@ -150,9 +151,6 @@ export default function FieldGroupForm() {
             <FieldGroup className="@container/field-group flex flex-col gap-6 md:flex-row md:gap-4">
               <form.Field
                 name="address"
-                validators={{
-                  onBlur: ({ value }) => (!value ? "Street address is required" : undefined),
-                }}
                 children={(field) => (
                   <Field data-invalid={field.state.meta.isTouched && !field.state.meta.isValid} className="flex-1">
                     <FieldLabel htmlFor={field.name}>Street Address</FieldLabel>
@@ -165,16 +163,13 @@ export default function FieldGroupForm() {
                       aria-invalid={field.state.meta.isTouched && !field.state.meta.isValid}
                       placeholder="Enter your street address"
                     />
-                    <FieldError errors={formatFormError(field.state.meta.errors)} />
+                    <FieldError errors={field.state.meta.errors} />
                   </Field>
                 )}
               />
 
               <form.Field
                 name="city"
-                validators={{
-                  onBlur: ({ value }) => (!value ? "City is required" : undefined),
-                }}
                 children={(field) => (
                   <Field data-invalid={field.state.meta.isTouched && !field.state.meta.isValid} className="flex-1">
                     <FieldLabel htmlFor={field.name}>City</FieldLabel>
@@ -187,7 +182,7 @@ export default function FieldGroupForm() {
                       aria-invalid={field.state.meta.isTouched && !field.state.meta.isValid}
                       placeholder="Enter your city"
                     />
-                    <FieldError errors={formatFormError(field.state.meta.errors)} />
+                    <FieldError errors={field.state.meta.errors} />
                   </Field>
                 )}
               />

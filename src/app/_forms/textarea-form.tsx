@@ -4,20 +4,32 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Textarea } from "@/components/ui/textarea";
-import { formatFormError } from "@/utils/format-form-error";
-import { useForm } from "@tanstack/react-form";
+import { revalidateLogic, useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
+import { z } from "zod";
+
+const textareaFormSchema = z.object({
+  about: z.string().min(1, "About section is required").max(500, "About section must be less than 500 characters"),
+});
+
+type TextareaFormData = z.infer<typeof textareaFormSchema>;
+
+const defaultValues: TextareaFormData = {
+  about: "",
+};
 
 export default function TextareaForm() {
   const form = useForm({
-    defaultValues: {
-      about: "",
-    },
-    onSubmit: async ({ value }) => {
-      toast.success("Form submitted successfully!", {
-        description: `About: ${value.about}`,
-      });
-      form.reset();
+    defaultValues: defaultValues,
+    validationLogic: revalidateLogic(),
+    validators: {
+      onDynamic: textareaFormSchema,
+      onSubmitAsync: async ({ value }) => {
+        toast.success("Form submitted successfully!", {
+          description: `About: ${value.about}`,
+        });
+        form.reset();
+      },
     },
   });
 
@@ -38,13 +50,6 @@ export default function TextareaForm() {
         >
           <form.Field
             name="about"
-            validators={{
-              onBlur: ({ value }) => {
-                if (!value) return "About section is required";
-                if (value.length > 500) return "About section must be less than 500 characters";
-                return undefined;
-              },
-            }}
             children={(field) => (
               <Field data-invalid={field.state.meta.isTouched && !field.state.meta.isValid}>
                 <FieldLabel htmlFor={field.name}>About You</FieldLabel>
@@ -62,7 +67,7 @@ export default function TextareaForm() {
                   Share your background, interests, or anything you'd like us to know. ({field.state.value.length}/500
                   characters)
                 </FieldDescription>
-                <FieldError errors={formatFormError(field.state.meta.errors)} />
+                <FieldError errors={field.state.meta.errors} />
               </Field>
             )}
           />

@@ -4,19 +4,32 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
-import { useForm } from "@tanstack/react-form";
+import { revalidateLogic, useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
+import { z } from "zod";
+
+const checkboxFormSchema = z.object({
+  notifications: z.array(z.string()).min(1, "Please select at least one notification preference."),
+});
+
+type CheckboxFormData = z.infer<typeof checkboxFormSchema>;
+
+const defaultValues: CheckboxFormData = {
+  notifications: [],
+};
 
 export default function CheckboxForm() {
   const form = useForm({
-    defaultValues: {
-      notifications: [] as string[],
-    },
-    onSubmit: async ({ value }) => {
-      toast.success("Notification preferences saved!", {
-        description: `Selected: ${value.notifications.join(", ") || "None"}`,
-      });
-      form.reset();
+    defaultValues: defaultValues,
+    validationLogic: revalidateLogic(),
+    validators: {
+      onDynamic: checkboxFormSchema,
+      onSubmitAsync: async ({ value }) => {
+        toast.success("Notification preferences saved!", {
+          description: `Selected: ${value.notifications.join(", ") || "None"}`,
+        });
+        form.reset();
+      },
     },
   });
 

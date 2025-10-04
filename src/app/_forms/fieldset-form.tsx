@@ -12,22 +12,36 @@ import {
   FieldSet,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { formatFormError } from "@/utils/format-form-error";
-import { useForm } from "@tanstack/react-form";
+import { revalidateLogic, useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
+import { z } from "zod";
+
+const fieldsetFormSchema = z.object({
+  streetAddress: z.string().min(1, "Street address is required"),
+  city: z.string().min(1, "City is required"),
+  postalCode: z.string().min(1, "Postal code is required"),
+});
+
+type FieldsetFormData = z.infer<typeof fieldsetFormSchema>;
+
+const defaultValues: FieldsetFormData = {
+  streetAddress: "",
+  city: "",
+  postalCode: "",
+};
 
 export default function FieldsetForm() {
   const form = useForm({
-    defaultValues: {
-      streetAddress: "",
-      city: "",
-      postalCode: "",
-    },
-    onSubmit: async ({ value }) => {
-      toast.success("Shipping address saved!", {
-        description: `${value.streetAddress}, ${value.city} ${value.postalCode}`,
-      });
-      form.reset();
+    defaultValues: defaultValues,
+    validationLogic: revalidateLogic(),
+    validators: {
+      onDynamic: fieldsetFormSchema,
+      onSubmitAsync: async ({ value }) => {
+        toast.success("Shipping address saved!", {
+          description: `${value.streetAddress}, ${value.city} ${value.postalCode}`,
+        });
+        form.reset();
+      },
     },
   });
 
@@ -53,9 +67,6 @@ export default function FieldsetForm() {
             <FieldGroup>
               <form.Field
                 name="streetAddress"
-                validators={{
-                  onBlur: ({ value }) => (!value ? "Street address is required" : undefined),
-                }}
                 children={(field) => (
                   <Field data-invalid={field.state.meta.isTouched && !field.state.meta.isValid}>
                     <FieldLabel htmlFor={field.name}>Street Address</FieldLabel>
@@ -68,7 +79,7 @@ export default function FieldsetForm() {
                       aria-invalid={field.state.meta.isTouched && !field.state.meta.isValid}
                       placeholder="123 Main St"
                     />
-                    <FieldError errors={formatFormError(field.state.meta.errors)} />
+                    <FieldError errors={field.state.meta.errors} />
                   </Field>
                 )}
               />
@@ -76,9 +87,6 @@ export default function FieldsetForm() {
               <div className="grid grid-cols-2 gap-4">
                 <form.Field
                   name="city"
-                  validators={{
-                    onBlur: ({ value }) => (!value ? "City is required" : undefined),
-                  }}
                   children={(field) => (
                     <Field data-invalid={field.state.meta.isTouched && !field.state.meta.isValid}>
                       <FieldLabel htmlFor={field.name}>City</FieldLabel>
@@ -92,7 +100,7 @@ export default function FieldsetForm() {
                         placeholder="New York"
                       />
                       {field.state.meta.isTouched && !field.state.meta.isValid && (
-                        <FieldError>{field.state.meta.errors.join(", ")}</FieldError>
+                        <FieldError errors={field.state.meta.errors} />
                       )}
                     </Field>
                   )}
@@ -100,9 +108,6 @@ export default function FieldsetForm() {
 
                 <form.Field
                   name="postalCode"
-                  validators={{
-                    onBlur: ({ value }) => (!value ? "Postal code is required" : undefined),
-                  }}
                   children={(field) => (
                     <Field data-invalid={field.state.meta.isTouched && !field.state.meta.isValid}>
                       <FieldLabel htmlFor={field.name}>Postal Code</FieldLabel>
@@ -116,7 +121,7 @@ export default function FieldsetForm() {
                         placeholder="90502"
                       />
                       {field.state.meta.isTouched && !field.state.meta.isValid && (
-                        <FieldError>{field.state.meta.errors.join(", ")}</FieldError>
+                        <FieldError errors={field.state.meta.errors} />
                       )}
                     </Field>
                   )}
